@@ -1,0 +1,39 @@
+https://consensys.github.io/smart-contract-best-practices/known_attacks/#dos-with-block-gas-limit
+
+Insufficient gas griefing¶
+
+This attack may be possible on a contract which accepts generic data and uses it to make a call another contract (a 'sub-call') via the low level address.call() function, as is often the case with multisignature and transaction relayer contracts.
+
+If the call fails, the contract has two options:
+
+revert the whole transaction
+continue execution.
+
+Take the following example of a simplified Relayer contract which continues execution regardless of the outcome of the subcall:
+
+contract Relayer {
+    mapping (bytes => bool) executed;
+
+    function relay(bytes _data) public {
+        // replay protection; do not call the same transaction twice
+        require(executed[_data] == 0, "Duplicate call");
+        executed[_data] = true;
+        innerContract.call(bytes4(keccak256("execute(bytes)")), _data);
+    }
+}
+
+This contract allows transaction relaying. Someone who wants to make a transaction but can't execute it by himself (e.g. due to the lack of ether to pay for gas) can sign data that he wants to pass and transfer the data with his signature over any medium. A third party "forwarder" can then submit this transaction to the network on behalf of the user.
+
+If given just the right amount of gas, the Relayer would complete execution recording the _dataargument in the executed mapping, but the subcall would fail because it received insufficient gas to complete execution.
+
+When a contract makes a sub-call to another contract, the EVM limits the gas forwarded to to 63/64 of the remaining gas,
+
+https://github.com/ethereum/EIPs/blob/master/EIPS/eip-150.md
+
+// contract called by Relayer
+contract Executor {
+    function execute(bytes _data, uint _gasLimit) {
+        require(gasleft() >= _gasLimit);
+        ...
+    }
+}

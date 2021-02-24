@@ -1,0 +1,81 @@
+Bilateral
+
+Two parties
+
+CME
+
+Swap market is a market bilateral agreements
+
+Dealer:
+
+Client:
+
+Dealer vs Dealer
+
+Dealer as a counterparty the swap market has an implicity risk inline with bank risk / counterparty risk
+
+Single A rating
+
+Swap curves, yields, treasury market there is yield ranks somewhere in line with the single A corporate credit yields
+
+not exactly the same
+
+financal vs corporate risk
+
+How is it traded through different products or instruments
+
+front end of the yield curve, 2/3 years out
+
+Eurodollar futures, primary means to trade 
+
+Essentially the expecations of the future swap rate
+
+Beyond 3+ years the futures market is not as liquid use Swaps
+
+Interest Rate Swaps (IRS) (Vanilla IRS)
+
+Nothing more exchanging payment
+
+agreeds to fixed 
+
+agreeds to pay float
+
+all sorts of swaps float vs float | fixed vs fixed | muniswaps
+
+Vanilla IRS:
+
+Fixed vs. float
+
+The expectation is that interest will increase and the dealer with hedge that
+
+Client will take the otherside through the bid offer spread, very small ultra liquid
+
+Many of trillions the biggest market in the world
+
+Interest to increase the other expeects the interest rate to decrease
+
+Recieve fixed get a fixed a coupon over the life of the swap and you pay floating, expect interest rates fall
+
+You gain the mark to market on the swap is positive
+
+If you expect interest rates to increase to pay fix and recieve floating you now pay the difference, that has a positive to you as the payer
+
+Swap decompose
+Cash flows1
+
+NOthing else two bonds one long, one short
+
+receiver being long a fixed rate bond
+being short a floating rate  -> you pay float 
+
+Important long short concept 
+Everything you need to know 
+Dervices from the long short concept
+10 year bond will have duration of 8 years, in the swap market 
+
+you receive fixed 8 year duratoin on fixed leg
+floating rate will have a small durationi, cant change much in value, usually below 1 year even 3 months
+
+Net-net duration of your swap 8 years - 3 months, 7 3/4 years is how you look at the risk
+
+

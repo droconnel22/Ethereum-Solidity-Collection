@@ -1,0 +1,31 @@
+Protocol specific recommendations¶
+The following recommendations apply to the development of any contract system on Ethereum.
+
+External Calls¶
+Use caution when making external calls¶
+Calls to untrusted contracts can introduce several unexpected risks or errors. External calls may execute malicious code in that contract or any other contract that it depends upon. As such, every external call should be treated as a potential security risk. When it is not possible, or undesirable to remove external calls, use the recommendations in the rest of this section to minimize the danger.
+
+Mark untrusted contracts¶
+When interacting with external contracts, name your variables, methods, and contract interfaces in a way that makes it clear that interacting with them is potentially unsafe. This applies to your own functions that call external contracts.
+
+// bad
+Bank.withdraw(100); // Unclear whether trusted or untrusted
+
+function makeWithdrawal(uint amount) { // Isn't clear that this function is potentially unsafe
+    Bank.withdraw(amount);
+}
+
+// good
+UntrustedBank.withdraw(100); // untrusted external call
+TrustedBank.withdraw(100); // external but trusted bank contract maintained by XYZ Corp
+
+function makeUntrustedWithdrawal(uint amount) {
+    UntrustedBank.withdraw(amount);
+}
+
+Avoid state changes after external calls¶
+Whether using raw calls (of the form someAddress.call()) or contract calls (of the form ExternalContract.someMethod()), assume that malicious code might execute. Even if ExternalContract is not malicious, malicious code can be executed by any contracts it calls.
+
+One particular danger is malicious code may hijack the control flow, leading to vulnerabilities due to reentrancy. (See Reentrancy for a fuller discussion of this problem).
+
+If you are making a call to an untrusted external contract, avoid state changes after the call. This pattern is also sometimes known as the checks-effects-interactions pattern.
