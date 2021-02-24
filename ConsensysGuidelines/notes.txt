@@ -1,1 +1,23 @@
 https://consensys.github.io/smart-contract-best-practices/
+
+https://en.wikipedia.org/wiki/Commitment_scheme
+
+The convenience functions assert and require can be used to check for conditions and throw an exception if the condition is not met.
+
+The assert function should only be used to test for internal errors, and to check invariants.
+
+The require function should be used to ensure valid conditions, such as inputs, or contract state variables are met, or to validate return values from calls to external contracts. *
+
+Interfaces also have limitations such as not being able to access storage or inherit from other interfaces which generally makes abstract contracts more practical. 
+
+Additionally, it is important to keep in mind that if a contract inherits from an abstract contract it must implement all non-implemented functions via overriding or it will be abstract as well.
+
+Since the fallback functions is not only called for plain ether transfers (without data) but also when no other function matches
+
+Something that might not be obvious: The payable modifier only applies to calls from external contracts. If I call a non-payable function in the payable function in the same contract, the non-payable function won't fail, though msg.value is still set
+
+Default visibility is public // bad
+
+An event is a convenient way to log something that happened in the contract. Events that were emitted stay in the blockchain along with the other contract data and they are available for future audit.
+
+You should use msg.sender for authorization (if another contract calls your contract msg.sender will be the address of the contract and not the address of the user who called the contract).

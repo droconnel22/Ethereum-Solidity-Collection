@@ -1,0 +1,53 @@
+Be aware that 'Built-ins' can be shadowed¶
+
+It is currently possible to shadow built-in globals in Solidity. This allows contracts to override the functionality of built-ins such as msg and revert(). Although this is intended, it can mislead users of a contract as to the contract's true behavior.
+
+contract PretendingToRevert {
+    function revert() internal constant {}
+}
+
+contract ExampleContract is PretendingToRevert {
+    function somethingBad() public {
+        revert();
+    }
+}
+Contract users (and auditors) should be aware of the full smart contract source code of any application they intend to use.
+
+Avoid using tx.origin¶
+Never use tx.origin for authorization, another contract can have a method which will call your contract (where the user has some funds for instance) and your contract will authorize that transaction as your address is in tx.origin.
+
+contract MyContract {
+
+    address owner;
+
+    function MyContract() public {
+        owner = msg.sender;
+    }
+
+    function sendTo(address receiver, uint amount) public {
+        require(tx.origin == owner);
+        (bool success, ) = receiver.call.value(amount)("");
+        require(success);
+    }
+
+}
+
+contract AttackingContract {
+
+    MyContract myContract;
+    address attacker;
+
+    function AttackingContract(address myContractAddress) public {
+        myContract = MyContract(myContractAddress);
+        attacker = msg.sender;
+    }
+
+    function() public {
+        myContract.sendTo(attacker, msg.sender.balance);
+    }
+
+}
+
+You should use msg.sender for authorization (if another contract calls your contract msg.sender will be the address of the contract and not the address of the user who called the contract).
+
+Besides the issue with authorization, there is a chance that tx.origin will be removed from the Ethereum protocol in the future, so code that uses tx.origin won't be compatible with future releases Vitalik: 'Do NOT assume that tx.origin will continue to be usable or meaningful.'

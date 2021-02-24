@@ -1,0 +1,24 @@
+Use modifiers only for checks¶
+The code inside a modifier is usually executed before the function body, so any state changes or external calls will violate the Checks-Effects-Interactions pattern. Moreover, these statements may also remain unnoticed by the developer, as the code for modifier may be far from the function declaration. For example, an external call in modifier can lead to the reentrancy attack:
+
+contract Registry {
+    address owner;
+
+    function isVoter(address _addr) external returns(bool) {
+        // Code
+    }
+}
+
+contract Election {
+    Registry registry;
+
+    modifier isEligible(address _addr) {
+        require(registry.isVoter(_addr));
+        _;
+    }
+
+    function vote() isEligible(msg.sender) public {
+        // Code
+    }
+}
+In this case, the Registry contract can make a reentracy attack by calling Election.vote() inside isVoter().
