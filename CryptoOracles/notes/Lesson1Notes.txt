@@ -1,0 +1,143 @@
+Chapter 1: Settings Things Up
+Before we begin, let's be clear: this is an intermediate lesson, and it requires a bit of JavaScript and Solidity knowledge.
+
+If you're new to Solidity, it's highly recommended that you go over the first lessons before starting this one.
+
+If you are not comfortable with JavaScript, consider going through a tutorial elsewhere before starting this lesson.
+
+Now, let's suppose you're building a DeFi dapp, and want to give your users the ability to withdraw ETH worth a certain amount of USD. To fulfill this request, your smart contract (for simplicity's sake we'll call it the "caller contract" from here onwards) must know how much one Ether is worth.
+
+And here's the thing: a JavaScript application can easily fetch this kind of information, making requests to the Binance public API (or any other service that publicly provides a price feed). But, a smart contract can't directly access data from the outside world. Instead, it relies on an oracle to pull the data.
+
+Phew! At first glance, this sounds like a complicated thing to do 🤯. But, by taking it one step at a time, we'll set you on a smooth sail.
+
+
+Chapter 2: Calling Other Contracts
+Now, instead of jumping directly to the oracle smart contract, we'll continue by looking into the caller smart contract. This is to help you understand the process from start to finish.
+
+One of the things the caller smart contract does is to interact with the oracle. Let's see how you can do this.
+
+For the caller smart contract to interact with the oracle, you must provide it with the following bits of information:
+
+The address of the oracle smart contract
+The signature of the function you want to call
+I reckon that the simplest approach would be to just hardcode the address of the oracle smart contract.
+
+But let’s put on our blockchain developer hat🎩and try to figure out if this is what we want to do.
+
+The answer has to do with how the blockchains work. Meaning that, once a contract is deployed, there's no way you can update it. As the natives call it, contracts are immutable.
+
+If you think about it, you'll see that there are plenty of cases in which you would want to update the address of the oracle. As an example, say there's a bug and the oracle gets redeployed. What then? You'll have to redeploy everything. And update your front-end.
+
+Yeah, this is costly, time-consuming, and it harms the user experience😣.
+
+So the way you'd want to go about this is to write a simple function that saves the address of the oracle smart contract in a variable. Then, it instantiates the oracle smart contract so your contract can call its functions at any time.
+
+
+Chapter 5: Using a Mapping to Keep Track of Requests
+Great, you've finished off the setOracleInstanceAddress function!
+
+Now, your front-end can call it to set the address of the oracle.
+
+Next, let's look into how the ETH price gets updated.
+
+To initiate an ETH price update, the smart contract should call the getLatestEthPrice function of the oracle. Now, due to its asynchronous nature, there's no way the getLatestEthPrice function can return this bit of information. What it does return instead, is a unique id for every request. Then, the oracle goes ahead and fetches the ETH price from the Binance API and executes a callback function exposed by the caller contract. Lastly, the callback function updates the ETH price in the caller contract.
+
+This is a really important point, so spend a few minutes thinking about it before moving forward.
+
+Now, does implementing this sound like a hard problem? Actually, the way this works is so easy it'll surprise you. Just bear with me for the next two chapters🤓.
+
+Mappings
+Every user of your dapp can initiate an operation that'll require the caller contract to make request to update the ETH price. Since the caller has no control over when it'll get a response, you must find a way to keep track of these pending requests. Doing so, you'll be able to make sure that each call to the callback function is associated with a legit request.
+
+To keep track of requests, you will use a mapping called myRequests. In Solidity, a mapping is basically a hash table in which all possible keys exist. But there's a catch. Initially, each value is initialized with the type's default value.
+
+You can define a mapping using something like the following:
+
+mapping(address => uint) public balances;
+Can you guess what this snippet does? Well... as said, it sets the balance of all possible addresses to 0. Why 0? Because that's the default value for uint.
+
+Setting the balance for msg.sender to someNewValue is as simple as:
+
+balances[msg.sender] = someNewValue
+
+
+Chapter 6: The Callback Function
+The caller contract logic is almost complete, but there's one more thing you should take care of.
+
+As mentioned in the previous chapter, calling the Binance public API is an asynchronous operation. Thus, the caller smart contract must provide a callback function which the oracle should call at a later time, namely when the ETH price is fetched.
+
+Here's how the callback function works:
+
+First, you would want to make sure that the function can only be called for a valid id. For that, you'll use a require statement.
+
+Simply put, a require statement throws an error and stops the execution of the function if a condition is false.
+
+Let's look at an example from the Solidity official documentation:
+
+require(msg.sender == chairperson, "Only chairperson can give right to vote.");
+The first parameter evaluates to true or false. If it's false, the function execution will stop and the smart contract will throw an error- "Only chairperson can give right to vote."
+
+Once you know that the id is valid, you can go ahead and remove it from the myRequests mapping.
+
+Note: To remove an element from a mapping, you can use something like the following: delete myMapping[key];
+
+Lastly, your function should fire an event to let the front-end know the price was successfully updated.
+
+Chapter 7: The onlyOracle Modifier
+Did you figure out the answer?
+
+Before you wrap up the callback function, you must make sure that only the oracle contract is allowed to call it.
+
+In this chapter, you'll create a modifier that prevents other contracts from calling your callback function.
+
+Note: We'll not delve into how modifiers work. If the details are fuzzy, go ahead and check out our previous lessons.
+
+Remember that you've already stored the address of the oracle into a variable called oracleAddress. Thus, the modifier should just check that the address calling this function is oracleAddress.
+
+But how do I know the address that calls a function you ask?
+
+In Solidity, msg.sender is a special variable that specifies the sender of the message. In other words, you can use msg.sender to figure out what address called your function.
+
+Chapter 8: The getLatestEthPrice Function
+Great job! You've just finished implementing the caller smart contract💪🏻💪🏻💪🏻.
+
+Now it's time to move forward to the oracle contract. Let's start by taking a look into what this contract should do.
+
+The gist of it is that the oracle contract acts as a bridge, enabling the caller contracts to access the ETH price feed. To achieve this, it just implements two functions: getLatestEthPrice and setLatestEthPrice.
+
+The getLatestEthPrice Function
+To allow the callers to track their requests, the getLatestEthPrice function should first compute the request id and, for security reasons, this number should be hard to guess.
+
+What security reasons, you ask?
+
+In the third lesson, you're going to make the oracle more decentralized. Generating a unique id makes it harder for oracles to collude and manipulate the price for a particular request.
+
+In other words, you would want to generate a random number.
+
+But how can you generate a random number in Solidity?
+
+One solution would be to let loose a zombie on a keyboard. But the poor zombie will also type spaces and letters so your "random number" will end up looking like this: erkljf3r4398r4390r830.
+
+So, even if no zombies were hurt in the making of this lesson, that solution for generating a random number is simply not good enough😎.
+
+However, in Solidity, you can compute a "good-enough" random number using the keccak256 function like this:
+
+uint randNonce = 0;
+uint modulus = 1000;
+uint randomNumber = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % modulus;
+
+The above takes the timestamp of now, the msg.sender, and an incrementing nonce (a number that is only ever used once, so we don't run the same hash function with the same input parameters twice). Then it packs the inputs and uses keccak256 to convert them to a random hash. Next, it converts the hash to a uint. Finally, it uses % modulus to take only the last 3 digits. This gives you a "good-enough" random number between 0 and modulus.
+
+Lesson 4 explains why this approach is not 100% secure and provides a few alternatives for generating truly secure random numbers. Give it a read once you've finished this lesson.
+
+Chapter 10: The setLatestEthPrice Function
+Awesome! In this chapter, you'll be putting together what you've learned so far to write the setLatestEthPrice function. This is going be a bit more complex, but there's nothing to be afraid of. I'll avoid big leaps of thought and make sure each step is well explained.
+
+So, the JavaScript component of the oracle (the one we'll write in the next lesson) retrieves the ETH price from the Binance public API and then calls the setLatestEthPrice, passing it the following arguments:
+
+The ETH price,
+The address of the contract that initiated the request
+The id of the request.
+First, your function must make sure that only the owner can call this function. Then, similarly to the code you've written in Chapter 6, your function should check whether the request id is valid. If so, it should remove it from pendingRequests.
+

@@ -1,0 +1,177 @@
+Chapter 1: Getting Set Up
+In this lesson, you're going to create the JavaScript component of the oracle that fetches the ETH price from the Binance API. Then, you'll build a basic client that interacts with the oracle.
+
+Take a look at the screen to the right. To get everything ready for you, we've:
+
+Created a new JavaScript file called EthPriceOracle.js
+Imported a bunch of prerequisites
+Initialized a few variables
+Filled in some boilerplate code that connects your app to Extdev Testnet (refer to the utils/common.js tab for details).
+Things to note:
+
+We've imported the build artifacts, and stored them in a const called OracleJSON. If you don't recall from the previous lessons what the build artifacts are, here's a quick refresher. The build artifacts are comprised of the bytecode versions of the smart contracts, ABIs, and some internal data Truffle is using to correctly deploy the code.
+
+What is an ABI you ask?
+
+In a nutshell, an ABI describes the interface between two computer programs. Don't mistake this for an API that defines an interface at a higher level (source code). An ABI describes how functions can be called and how data is stored in a machine-readable format. As an example, here's how the pendingRequests property of the oracle contract is described:
+
+{
+  "constant": false,
+  "id": 143,
+  "name": "pendingRequests",
+  "nodeType": "VariableDeclaration",
+  "scope": 240,
+  "src": "229:38:2",
+  "stateVariable": true,
+  "storageLocation": "default",
+  "typeDescriptions": {
+    "typeIdentifier": "t_mapping$_t_uint256_$_t_bool_$",
+    "typeString": "mapping(uint256 => bool)"
+  },
+Aren’t you happy to be using higher-level languages such as JavaScript and Solidity that abstract away all this complexity? I certainly am🤓!
+
+We've initialized an empty array called pendingRequests. You'll use this later to keep track of the incoming requests.
+☞ Spend a couple of minutes to give the code a read-through before moving on!
+
+Instantiate the Oracle Contract
+The build artifacts live inside of a JSON file, and we've imported them using the following line of code:
+
+const OracleJSON = require('./oracle/build/contracts/EthPriceOracle.json')
+As an example, based on the information stored in this file, your application knows that the setLatestEthPrice function takes three uint256s as arguments (_ethPrice, _callerAddress, and _id), and it can create a transaction that calls this function.
+
+But before that, interacting with a deployed contract from JavaScript requires you to instantiate it using the web3.eth.Contract. Let's look at an example to make the concept clear:
+
+const myContract = new web3js.eth.Contract(myContractJSON.abi, myContractJSON.networks[networkId].address)
+Note that the above example uses a variable called networkId that identifies the network on which your contract has been deployed. The networkId for Extdev is 9545242630824, so you could declare the networkId variable as follows:
+
+const networkId = 9545242630824
+Easy peasy! But no matter how simple the above line of code looks, it's not such a good idea to hardcode the identifier of the network like this. Why not? Well, because doing so would require you to update networkId every time your contract gets deployed to a different network.
+
+A better solution is to resolve networkId by calling the web3js.eth.net.getId() function:
+
+const networkId = await web3js.eth.net.getId()
+
+Chapter 2: Listening for Events
+Sweet, you've instantiated your contract🙌🏻! Now you can call its functions.
+
+But let's take a step back, to put things in perspective. Do you remember how your JavaScript application gets notified about new requests?
+
+Well...🤔?
+
+Let me answer that.
+
+The oracle will just fire an event that'll trigger an action. So, before writing the code that calls the oracle contract, your app should first "watch" for events.
+
+Below is a quick refresher on how the oracle emits GetLatestEthPriceEvent:
+
+function getLatestEthPrice() public returns (uint256) {
+  randNonce++;
+  uint id = uint(keccak256(abi.encodePacked(now, msg.sender, randNonce))) % modulus;
+  pendingRequests[id] = true;
+  emit GetLatestEthPriceEvent(msg.sender, id);
+  return id;
+}
+Now, every time the oracle fires GetLatestEthPriceEvent, your app should pick up that event and push it to the pendingRequests array.
+
+As an example, here's how you can listen for an event:
+
+myContract.events.EventName(async (err, event) => {
+    if (err) {
+      console.error('Error on event', err)
+      return
+    }
+    // Do something
+  })
+The above snippet just listens for an event called EventName. For more complex use cases, you could also specify a filter like so:
+
+myContract.events.EventName({ filter: { myParam: 1 } ,async (err, event) => {
+    if (err) {
+      console.error('Error on event', err)
+      return
+    }
+    // Do something
+  })
+
+The above triggers only when an event where myParam is equal to 1 gets fired.
+
+Chapter 4: Looping Trough the Processing Queue
+Having coded the function that adds a new request whenever the oracle contract fires GetLatestEthPriceEvent, the next thing on your list should be to process these requests.
+
+Imagine there are a bunch of caller contracts sending requests to your oracle. Processing the pendingRequests array in Node.js could be problematic for a very simple reason: JavaScript is single-threaded. This means that all other operations would be blocked until the processing is finished.
+
+A technique to solve this problem is to break the array into smaller chunks (up to MAX_CHUNK_SIZE), and process these chunks individually. To simplify things, after each chunk, the application will sleep for SLEEP_INTERVAL milliseconds.
+
+You'll implement this with a while loop.
+
+A while loop is comprised of a condition that's evaluated at every pass and the code that gets executed. The condition is enclosed in parentheses and the code is enclosed in curly brackets:
+
+let counter = 0
+while ( counter <= 10 ) {
+  console.log(counter)
+  counter++
+}
+But what if two conditions must be met for the code in the curly brackets to be executed? If so, you can test for two conditions (or more than two if you want), by chaining them using the logical AND operator (&&):
+
+let counter = 0
+while ( counter <= 10 && isNotMonday) {
+  console.log(counter)
+  counter++
+}
+The above is simply too lazy to do anything on Monday😴😴😴.
+
+That said, let's make the function that breaks this array into smaller pieces.
+
+
+Chapter 5: Processing the Queue
+In the previous chapter, we've created an empty shell for the processQueue function. Let's now focus on filling it in.
+
+The first thing your function should do is to retrieve the first element from the pendingRequest array. Of course, once retrieved, the element should also be removed from the array. In JavaScript, you can do this by calling the shift method which returns the first element of the array, removes the element from the array, and changes the length of the array. Continuing our example from the second chapter, here's how shift works:
+
+let numbers = [ { 1: 'one' }, { 2: 'two' }, { 3: 'three' } ]
+const item = numbers.shift()
+console.log(item)
+This prints { '1': 'one' }.
+
+Then, you'll have to call the processRequest function. I see you raising your eyebrow and asking: what does this function actually do? The simple answer is that it... processes the request. The detailed answer would be that it fetches the ETH price, and then calls the oracle smart contract. Don't worry about it right now, you'll write it in the next chapters.
+
+Lastly, you'll have to increment the processedRequests variable.
+
+Chapter 6: The Retry Loop
+Now, retrieving the ETH price from the Binance public API comes with the following aspects which are worth paying attention to.
+
+On one hand, suppose that you make a request but there's a network glitch. If so, the request will fail. If you just let that happen, the caller contract will have to reinitiate the whole process from the beginning, even if in a matter of seconds the network connectivity is restored. Yeah, this is not robust enough. Are we thinking of the same solution? Let's see. The way I'd go about this is to implement a retry mechanism.
+
+So, on error, the application will start retrying. But, on the other hand, if there's a larger issue (like the address of the API has been changed), your app could get stuck in an infinite loop.
+
+Thus, you'll need a condition that breaks the retry loop, if need be.
+
+Similar to how you did in Chapter 4, you'll simply write a while block. But this time, you'll increment a variable on each pass and the loop will check whether that variable is < MAX_RETRIES.
+
+See how simple this is?
+
+Chapter 9: Working with Numbers in Ethereum and JavaScript
+Remember we've mentioned that data needs a bit of massaging before it's sent to the oracle contract. Let's look into why.
+
+The Ethereum Virtual Machine doesn't support floating-point numbers, meaning that divisions truncate the decimals. The workaround is to simply multiply the numbers in your front-end by 10**n. The Binance API returns eight decimals numbers and we'll also multiply this by 10**10. Why did we choose 10**10? There's a reason: one ether is 10**18 wei. This way, we'll be sure that no money will be lost.
+
+But there's more to it. The Number type in JavaScript is "double-precision 64-bit binary format IEEE 754 value" which supports only 16 decimals...
+
+Luckily, there's a small library called BN.js that'll help you overcome these issues.
+
+☞ For the above reasons, it's recommended that you always use BN.js when dealing with numbers.
+
+Now, the Binance API returns something like 169.87000000.
+
+Let's see how you can convert this to BN.
+
+First, you'll have to get rid of the decimal separator (the dot). Since JavaScript is a dynamically typed language (that's a fancy way of saying that the interpreter analyzes the values of the variables at runtime and, based on the values, it assigns them a type), the easiest way to do this is...
+
+aNumber = aNumber.replace('.', '')
+Continuing with this example, converting aNumber to BN would look something like this:
+
+const aNumber = new BN(aNumber, 10)
+Note: The second argument represents the base. Make sure it's always specified.
+
+We've gone ahead and filled in almost all the code that goes to the setLatestEthPrice function. Here's what's left for you to do.
+
+

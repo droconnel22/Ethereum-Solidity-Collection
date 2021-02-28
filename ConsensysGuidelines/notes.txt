@@ -21,3 +21,17 @@ Default visibility is public // bad
 An event is a convenient way to log something that happened in the contract. Events that were emitted stay in the blockchain along with the other contract data and they are available for future audit.
 
 You should use msg.sender for authorization (if another contract calls your contract msg.sender will be the address of the contract and not the address of the user who called the contract).
+
+SOFR
+
+this refers to the instance of the contract where the call is made (you can have multiple instances of the same contract).
+
+address(this) refers to the address of the instance of the contract where the call is being made.
+
+msg.sender refers to the address where the contract is being called from.
+
+Therefore, address(this) and msg.sender are two unique addresses, the first referring to the address of the contract instance and the second referring to the address where the contract call originated from.
+
+Every account in Ethereum has an address. Contracts are special kinds of accounts and have their own addresses different from msg.sender and this.owner.
+
+The contract's address is determined by the account that created it and its nonce. So if you create a new contract from address1 you can know in advance what’s the address of your new contract e.g. with this Solidity code: address(keccak256(0xd6, 0x94, address1, currentNonce)). You can find more details in this answer How is the address of an Ethereum contract computed?
