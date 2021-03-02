@@ -103,7 +103,5 @@ dist
 # TernJS port file
 .tern-port
 
-# Configs
-.env*
-
-truffle-config.js
+# Truffle contract build files
+build/contracts
