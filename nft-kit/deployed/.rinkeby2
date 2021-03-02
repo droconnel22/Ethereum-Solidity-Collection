@@ -1,0 +1,73 @@
+
+_deploy_contracts.js
+=====================
+
+   Deploying 'ERC721'
+   ------------------
+   > block number:        8164835
+   > block timestamp:     1614702198
+   > account:             0x2C3f55F542B31722904E566b2BbeB3BCd9Af84e2
+   > balance:             18.79968475
+   > gas used:            1999045 (0x1e80c5)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00399809 ETH
+
+   -------------------------------------
+   > Total cost:          0.00399809 ETH
+
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.00399809 ETH
+
+
+
+
+
+Starting migrations...
+======================
+> Network name:    'rinkeby'
+> Network id:      4
+> Block gas limit: 10000000 (0x989680)
+
+tarting migrations...
+======================
+> Network name:    'rinkeby'
+> Network id:      4
+> Block gas limit: 10000000 (0x989680)
+
+
+2_deploy_contracts.js
+=====================
+
+   Deploying 'ERC721'
+   ------------------
+   > transaction hash:    0x9b5cef41025380bf29d4df95f245ab91dc720f79beb07622eaf21d200ff2d8bb
+   > Blocks: 2            Seconds: 16
+   > contract address:    0xe8205e4B52bEC35FB15E1695c19beC782bd6dc37
+   > block number:        8164835
+   > block timestamp:     1614702216
+   > account:             0x2C3f55F542B31722904E566b2BbeB3BCd9Af84e2
+   > balance:             18.76310194
+   > gas used:            2029045 (0x1ef5f5)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0405809 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 1 (block: 8164836)
+   > confirmation number: 2 (block: 8164837)
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:           0.0405809 ETH
+
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.0405809 ETH

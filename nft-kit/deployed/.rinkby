@@ -1,0 +1,40 @@
+ERC721,"TonyDennisNFT01","TDNFT" => 0xaab70432f79d92315e75b8663f8d4c1dc649e36c
+0xaaB70432f79d92315e75b8663f8d4c1dc649e36C
+2_deploy_contracts.js
+=====================
+
+   Deploying 'ERC721'
+   ------------------
+   > block number:        8164504
+   > block timestamp:     1614697198
+   > account:             0x2C3f55F542B31722904E566b2BbeB3BCd9Af84e2
+   > balance:             0.095488284
+   > gas used:            1999045 (0x1e80c5)
+   > gas price:           2 gwei
+   > value sent:          0 ETH
+   > total cost:          0.00399809 ETH
+
+   -------------------------------------
+   > Total cost:          0.00399809 ETH
+
+
+   =====================
+
+   Deploying 'ERC721'
+   ------------------
+   > transaction hash:    0x74da225357bb12df76b59440f70042790af425c2428cbbe7d5ddeb78c60dfdd9
+   > Blocks: 0            Seconds: 12
+   > contract address:    0xaaB70432f79d92315e75b8663f8d4c1dc649e36C
+   > block number:        8164506
+   > block timestamp:     1614697277
+   > account:             0x2C3f55F542B31722904E566b2BbeB3BCd9Af84e2
+   > balance:             0.05368284
+   > gas used:            2029045 (0x1ef5f5)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0405809 ETH
+
+   Pausing for 2 confirmations...
+   ------------------------------
+   > confirmation number: 1 (block: 8164507)
+   > confirmation number: 2 (block: 8164508)

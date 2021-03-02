@@ -1,0 +1,287 @@
+{
+  "contractName": "OwnableDelegateProxy",
+  "abi": [],
+  "metadata": "{\"compiler\":{\"version\":\"0.8.0+commit.c7dfd78e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/opensea/proxy-registry.sol\":\"OwnableDelegateProxy\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/opensea/proxy-registry.sol\":{\"keccak256\":\"0xe0354e9b69d973e8a8b4dcee7dfae4356558b56c8c81166e8d5909fff2995d02\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://31fcc5dab6ffa51d7a377356e5385ae9a368ca4f11084f1c3c304ae33d0a010e\",\"dweb:/ipfs/QmaPG8TLpVtqS7sQFGz4mkrSDScJjjvCNfCzG2AzyYsHyz\"]},\"/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/utils/Context.sol\":{\"keccak256\":\"0xe276f29f36979325fa961cc8e836400cdd83bd018ab4477e342af89ecf3d5212\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://d5c15c4a38be242143a9defc56db0768e6a7fe433ef792b8a84cb0a7cc7380ee\",\"dweb:/ipfs/QmfLNSkF7d27vbMJcuinAsDrXNhYKgsTNYnW5onWTKq9mq\"]}},\"version\":1}",
+  "bytecode": "0x6080604052348015600f57600080fd5b50603f80601d6000396000f3fe6080604052600080fdfea2646970667358221220ee1479b55ae62071668c9e44efd19d533aa9d070fab2085014e5a37696f054a664736f6c63430008000033",
+  "deployedBytecode": "0x6080604052600080fdfea2646970667358221220ee1479b55ae62071668c9e44efd19d533aa9d070fab2085014e5a37696f054a664736f6c63430008000033",
+  "immutableReferences": {},
+  "generatedSources": [],
+  "deployedGeneratedSources": [],
+  "sourceMap": "91:33:13:-:0;;;;;;;;;;;;;;;;;;;",
+  "deployedSourceMap": "91:33:13:-:0;;;;;",
+  "source": "// SPDX-License-Identifier: MIT\n\npragma solidity <0.9.0;\n\nimport \"../utils/Context.sol\";\n\n\ncontract OwnableDelegateProxy { }\n\ncontract ProxyRegistry {\n    mapping(address => OwnableDelegateProxy) public proxies;\n}",
+  "sourcePath": "/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/opensea/proxy-registry.sol",
+  "ast": {
+    "absolutePath": "/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/opensea/proxy-registry.sol",
+    "exportedSymbols": {
+      "Context": [
+        2550
+      ],
+      "OwnableDelegateProxy": [
+        2133
+      ],
+      "ProxyRegistry": [
+        2139
+      ]
+    },
+    "id": 2140,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2131,
+        "literals": [
+          "solidity",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:13"
+      },
+      {
+        "absolutePath": "/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/utils/Context.sol",
+        "file": "../utils/Context.sol",
+        "id": 2132,
+        "nodeType": "ImportDirective",
+        "scope": 2140,
+        "sourceUnit": 2551,
+        "src": "58:30:13",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 2133,
+        "linearizedBaseContracts": [
+          2133
+        ],
+        "name": "OwnableDelegateProxy",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 2140,
+        "src": "91:33:13"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 2139,
+        "linearizedBaseContracts": [
+          2139
+        ],
+        "name": "ProxyRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "c4552791",
+            "id": 2138,
+            "mutability": "mutable",
+            "name": "proxies",
+            "nodeType": "VariableDeclaration",
+            "scope": 2139,
+            "src": "155:55:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_contract$_OwnableDelegateProxy_$2133_$",
+              "typeString": "mapping(address => contract OwnableDelegateProxy)"
+            },
+            "typeName": {
+              "id": 2137,
+              "keyType": {
+                "id": 2134,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "163:7:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "155:40:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_contract$_OwnableDelegateProxy_$2133_$",
+                "typeString": "mapping(address => contract OwnableDelegateProxy)"
+              },
+              "valueType": {
+                "id": 2136,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 2135,
+                  "name": "OwnableDelegateProxy",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2133,
+                  "src": "174:20:13"
+                },
+                "referencedDeclaration": 2133,
+                "src": "174:20:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_OwnableDelegateProxy_$2133",
+                  "typeString": "contract OwnableDelegateProxy"
+                }
+              }
+            },
+            "visibility": "public"
+          }
+        ],
+        "scope": 2140,
+        "src": "126:87:13"
+      }
+    ],
+    "src": "33:180:13"
+  },
+  "legacyAST": {
+    "absolutePath": "/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/opensea/proxy-registry.sol",
+    "exportedSymbols": {
+      "Context": [
+        2550
+      ],
+      "OwnableDelegateProxy": [
+        2133
+      ],
+      "ProxyRegistry": [
+        2139
+      ]
+    },
+    "id": 2140,
+    "license": "MIT",
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 2131,
+        "literals": [
+          "solidity",
+          "<",
+          "0.9",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "33:23:13"
+      },
+      {
+        "absolutePath": "/Users/dennismacpro/Projects/Defi/Ethereum-Solidity-Collection/nft-kit/contracts/utils/Context.sol",
+        "file": "../utils/Context.sol",
+        "id": 2132,
+        "nodeType": "ImportDirective",
+        "scope": 2140,
+        "sourceUnit": 2551,
+        "src": "58:30:13",
+        "symbolAliases": [],
+        "unitAlias": ""
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 2133,
+        "linearizedBaseContracts": [
+          2133
+        ],
+        "name": "OwnableDelegateProxy",
+        "nodeType": "ContractDefinition",
+        "nodes": [],
+        "scope": 2140,
+        "src": "91:33:13"
+      },
+      {
+        "abstract": false,
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "fullyImplemented": true,
+        "id": 2139,
+        "linearizedBaseContracts": [
+          2139
+        ],
+        "name": "ProxyRegistry",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "constant": false,
+            "functionSelector": "c4552791",
+            "id": 2138,
+            "mutability": "mutable",
+            "name": "proxies",
+            "nodeType": "VariableDeclaration",
+            "scope": 2139,
+            "src": "155:55:13",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_mapping$_t_address_$_t_contract$_OwnableDelegateProxy_$2133_$",
+              "typeString": "mapping(address => contract OwnableDelegateProxy)"
+            },
+            "typeName": {
+              "id": 2137,
+              "keyType": {
+                "id": 2134,
+                "name": "address",
+                "nodeType": "ElementaryTypeName",
+                "src": "163:7:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_address",
+                  "typeString": "address"
+                }
+              },
+              "nodeType": "Mapping",
+              "src": "155:40:13",
+              "typeDescriptions": {
+                "typeIdentifier": "t_mapping$_t_address_$_t_contract$_OwnableDelegateProxy_$2133_$",
+                "typeString": "mapping(address => contract OwnableDelegateProxy)"
+              },
+              "valueType": {
+                "id": 2136,
+                "nodeType": "UserDefinedTypeName",
+                "pathNode": {
+                  "id": 2135,
+                  "name": "OwnableDelegateProxy",
+                  "nodeType": "IdentifierPath",
+                  "referencedDeclaration": 2133,
+                  "src": "174:20:13"
+                },
+                "referencedDeclaration": 2133,
+                "src": "174:20:13",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_contract$_OwnableDelegateProxy_$2133",
+                  "typeString": "contract OwnableDelegateProxy"
+                }
+              }
+            },
+            "visibility": "public"
+          }
+        ],
+        "scope": 2140,
+        "src": "126:87:13"
+      }
+    ],
+    "src": "33:180:13"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.8.0+commit.c7dfd78e.Darwin.appleclang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-03-02T17:03:26.951Z",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  }
+}

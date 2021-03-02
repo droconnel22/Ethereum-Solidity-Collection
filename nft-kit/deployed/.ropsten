@@ -1,0 +1,15 @@
+ERC721,"TonyDennisNFT01","TDNFT" => 0xaab70432f79d92315e75b8663f8d4c1dc649e36c
+https://ropsten.etherscan.io/tx/0xe923dcc8ce0baef315f980669be08391f1f0125010364da57786c005c8ead62e
+Deploying 'ERC721'
+   ------------------
+   > transaction hash:    0xe923dcc8ce0baef315f980669be08391f1f0125010364da57786c005c8ead62e
+   > Blocks: 0            Seconds: 24
+   > contract address:    0xaaB70432f79d92315e75b8663f8d4c1dc649e36C
+   > block number:        9762476
+   > block timestamp:     1614696309
+   > account:             0x2C3f55F542B31722904E566b2BbeB3BCd9Af84e2
+   > balance:             0.95368284
+   > gas used:            2029045 (0x1ef5f5)
+   > gas price:           20 gwei
+   > value sent:          0 ETH
+   > total cost:          0.0405809 ETH

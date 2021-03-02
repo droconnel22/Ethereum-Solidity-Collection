@@ -1,3 +1,7 @@
+const PkWalletProvider = require('truffle-hdwallet-provider-privkey');
+var HDWalletProvider = require("truffle-hdwallet-provider");
+const NonceTrackerSubprovider = require("web3-provider-engine/subproviders/nonce-tracker")
+
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -25,6 +29,11 @@
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 // ipfs://bafybeiddr5za3dfhyiedukczvlqovht4kauszb7jdohddunfzgqmrwsxpm/
+// ropseten PK 
+const ropstenPK =['49ce2c740ac387ea9c4bbcde623a17836f87c05ef040ca6afcaf67df14398cee']
+const rinkbyPk = ['49ce2c740ac387ea9c4bbcde623a17836f87c05ef040ca6afcaf67df14398cee']
+const ropstenPkProvider = new HDWalletProvider(ropstenPK, "https://ropsten.infura.io/v3/95cbc6ad4aff40b980d0fa7d9426a179");
+const rinkbyPkProvider = new HDWalletProvider(rinkbyPk, "https://rinkeby.infura.io/v3/95cbc6ad4aff40b980d0fa7d9426a179");
 
 module.exports = {
   /**
@@ -38,6 +47,28 @@ module.exports = {
    */
 
   networks: {
+    development: {
+      host: '127.0.0.1',
+      port: 8545,
+      network_id: 5777,
+      gas: 6721975,
+      gasPrice: 20000000000
+    },
+    ropsten: {
+      provider: ropstenPkProvider,
+      network_id: 3,
+      gas: 5500000,
+      confirmations: 2, 
+      timeoutBlocks: 200,
+    },
+    rinkeby :{
+      provider: rinkbyPkProvider,
+      network_id: 4,
+      gas: 4612388, // Gas limit used for deploys
+      confirmations: 2, 
+      timeoutBlocks: 200,
+    }
+    
     // Useful for testing. The `development` name is special - truffle uses it by default
     // if it's defined here and no other network is specified at the command line.
     // You should run a client (like ganache-cli, geth or parity) in a separate terminal
@@ -84,6 +115,7 @@ module.exports = {
   // Configure your compilers
   compilers: {
     solc: {
+      version: "native"
       // version: "0.5.1",    // Fetch exact version from solc-bin (default: truffle's version)
       // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
       // settings: {          // See the solidity docs for advice about optimization and evmVersion
