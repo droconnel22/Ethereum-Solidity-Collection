@@ -1,7 +1,7 @@
+
 // SPDX-License-Identifier: MIT
 
-pragma solidity <0.9.0;
-
+pragma solidity >=0.5.11 <0.9.0;
 
 /**
  * @dev Standard math utilities missing in the Solidity language.

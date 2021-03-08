@@ -1,7 +1,7 @@
 // https://github.com/ProjectOpenSea/opensea-creatures/blob/master/migrations/2_deploy_contracts.js
 
-const ERC721 = artifacts.require("ERC721");
-const TradeableERC721Token = artifacts.require("TradeableERC721Token");
+const LogicReptile = artifacts.require("LogicReptile");
+
 module.exports = async(deployer, network, addresses) => {
     // OpenSea proxy registry addresses for rinkeby and mainnet.
   let proxyRegistryAddress = "";
@@ -13,5 +13,5 @@ module.exports = async(deployer, network, addresses) => {
   }
     
     // Additional contracts can be deployed here
-    await deployer.deploy(TradeableERC721Token,"TonyDennisNFT03","TDNFT",proxyRegistryAddress);
+    await deployer.deploy(LogicReptile,"LogicReptileTest","LRT1",proxyRegistryAddress);
 };

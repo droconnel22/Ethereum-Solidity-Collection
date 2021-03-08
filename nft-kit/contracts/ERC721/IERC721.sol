@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
+pragma solidity >=0.5.11 <0.9.0;
 
-pragma solidity <0.9.0;
-
-import "../utils/introspection/IERC165.sol";
+import "../introspection/IERC165.sol";
 
 /**
  * @dev Required interface of an ERC721 compliant contract.

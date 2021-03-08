@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity >=0.5.11 <0.9.0;
 
-import "../utils/escrow/Escrow.sol";
+import "../escrow/Escrow.sol";
 
 /**
  * @dev Simple implementation of a
