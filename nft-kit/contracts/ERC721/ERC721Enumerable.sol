@@ -171,7 +171,7 @@ contract ERC721Enumerable is Context, ERC165, ERC721, IERC721Enumerable {
         }
 
         // This also deletes the contents at the last position of the array
-        //_ownedTokens[from];
+        _ownedTokens[from].pop();
 
         // Note that _ownedTokensIndex[tokenId] hasn't been cleared: it still points to the old slot (now occupied by
         // lastTokenId, or just over the end of the array if the token was the last one).
@@ -198,7 +198,7 @@ contract ERC721Enumerable is Context, ERC165, ERC721, IERC721Enumerable {
         _allTokensIndex[lastTokenId] = tokenIndex; // Update the moved token's index
 
         // This also deletes the contents at the last position of the array
-        //_allTokens.length--;
+        _allTokens.pop();
         _allTokensIndex[tokenId] = 0;
     }
 }
