@@ -1,0 +1,12 @@
+https://andybargh.com/hexadecimal/
+
+The main benefit of using Hexadecimal notation is that it allows us to write out the value of a byte in a human readable format using only two characters. Those two characters are still able to represent all 256 possible values of the byte.
+
+Converting from Decimal to Hexadecimal
+The process to convert from a decimal number into a hexadecimal number is an iterative one.
+
+Step 1 of the process is to perform integer division and divide our decimal number by 16. This results in a quotient (above the line) and a remainder at the bottom. In this case the quotient is 2743 and the remainder is 6.
+
+Step 2 is to convert the remainder and express it in hexadecimal notation. As 6 in decimal is also expressed as 6 in hexadecimal we have our first digit.
+
+n the next step, we take the quotient we calculated in step 1 (2743) and work out whether it is less than 16. As it isn’t, we go back and repeat steps 1 and 2 above dividing the quotient from step 1 by 16 to calculate a new quotient and new remainder.

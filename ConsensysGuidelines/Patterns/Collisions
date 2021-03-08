@@ -1,0 +1,25 @@
+https://mixbytes.io/blog/collisions-solidity-storage-layouts
+
+Delegatecall & Collisions of Solidity Storage Layouts
+
+Ethereum smart contract storage is a mapping uint256 to uint256. Uint256 value is 32-bytes wide;
+
+this fixed-size value is called a slot in Ethereum context.
+
+This model is similar to virtual random access memory with an exception that the address width is 256 bits (unlike the standard 32 and 64-bits)
+
+and each value size is 32 bytes instead of one.
+
+Allocators have an API (malloc, free, new, delete, and other functions)
+
+Moreover, records are often stored "compactly" not to litter the address space with data that is also an allocator responsibility. Solidity does not possess a storage-controlling allocator, and the tasks are handled differently.
+
+Smart contract values are stored in slots, starting from slot 0 and so on.
+
+We can easily check an array element address by executing the js-code:
+web3.sha3('0x00000000000000000000000000000000000000000000000000000000000000002
+', {encoding: 'hex'})
+
+The above-described rules are called "Layout of State Variables in Storage" (later referred to as "Storage Layout"), the details can be found and should be checked here. Modifying these rules would eliminate backward compatibility, therefore we are unlikely to see any changes affecting smart contracts and libraries in the future.
+
+A particular code version, that records data in the storage of a proxy, has its own variables and storage layout. The following version will also have its storage layout and it must be capable of handling the data formed in accordance with the previous storage layout. That's half the trouble. Don't forget about the proxy code that also has a storage layout and operates in parallel with the current smart contract version that gains control. Thus, the proxy code storage layout and the current smart contract version should not interact, i.e. they cannot use the same slots for different data.

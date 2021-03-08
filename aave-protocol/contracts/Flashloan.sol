@@ -1,4 +1,5 @@
-pragma solidity ^0.6.6;
+// SPDX-License-Identifier: MIT
+pragma solidity <0.9.0 >=0.7.0;
 
 import "./aave/FlashLoanReceiverBase.sol";
 import "./aave/ILendingPoolAddressesProvider.sol";
@@ -12,23 +13,23 @@ contract Flashloan is FlashLoanReceiverBase {
         This function is called after your contract has received the flash loaned amount
      */
     function executeOperation(
-        address _reserve,
-        uint256 _amount,
-        uint256 _fee,
-        bytes calldata _params
+        address _anyERC20ContractAddressAsReserve,
+        uint256 _thatERC20AmountToBorrow,
+        uint256 _theFeeForProcessTheFlashloan,
+        bytes calldata _anyImmutableExtraData
     )
         external
         override
     {
-        require(_amount <= getBalanceInternal(address(this), _reserve), "Invalid balance, was the flashLoan successful?");
+        require(_thatERC20AmountToBorrow <= getBalanceInternal(address(this), _anyERC20ContractAddressAsReserve), "Invalid balance, was the flashLoan successful?");
 
         //
         // Your logic goes here.
         // !! Ensure that *this contract* has enough of `_reserve` funds to payback the `_fee` !!
         //
 
-        uint totalDebt = _amount.add(_fee);
-        transferFundsBackToPoolInternal(_reserve, totalDebt);
+        uint totalDebt = _thatERC20AmountToBorrow.add(_theFeeForProcessTheFlashloan);
+        transferFundsBackToPoolInternal(_anyERC20ContractAddressAsReserve, totalDebt);
     }
 
     /**

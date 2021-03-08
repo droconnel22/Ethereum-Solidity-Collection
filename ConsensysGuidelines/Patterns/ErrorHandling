@@ -1,0 +1,150 @@
+https://medium.com/coinmonks/solidity-fundamentals-a95bb6c8ba2a
+
+Solidity Fundamentals: Error Handling
+Assert, Require, Revert, and Exceptions
+
+Reverting state changes to prevent possible issues is one necessity when writing Solidity. In this part we will be working on how to handle errors using revert, require, assert and try/catch to undoes all changes made to the state in the current call.
+
+Currently, Solidity supports two error signatures: Error(string) and Panic(uint256)
+
+Error(string) is used for regular error conditions 
+
+Panic(uint256) is used for errors that should not be present in bug-free code.
+
+assert should only be used to test for internal errors, and to check invariants.
+
+Following are the cases when Solidity creates assert type — Panic(uint256) exceptions;
+
+Calling assert with an argument showing false
+Provided arithmetic operation results in underflow or overflow (see: Value Types: Part One)
+Divide or modulo by zero
+Convert too big or negative value to enum
+Calling pop() on an empty array
+Access an array element which is out of bounds or negative
+Allocate to much memory or create an array that is too large
+Invoking zero-initialized variable of an internal function type
+
+contract Assert {
+    // Adds two numbers
+    function add(uint256 a, uint256 b) internal pure returns (uint256) {
+        uint256 c = a + b;
+        
+        // assert should be used for internal error checking
+        // throws on overflow
+        assert(c >= a);
+        
+        return c;
+    }
+
+The require function used to guarantees valid conditions that can’t be detected before execution.
+
+It checks conditions on input, contract state variables or return values from calls to external contracts. 
+
+Following are the cases when Solidity creates require type — Error(string) exceptions;
+
+Calling require with an argument showing false
+Performing an external function call to a contract that contains no code
+When contract receives Ether via a public function without payable modifier — including constructor and fallback function (more on these topics later)
+When your contract gets Ether through a public getter function.
+
+function idGenerator() external view returns (uint) {
+        // the account that invokes this function must be a lawyer
+    // otherwise, create an error 'Only lawyer!'
+    require(msg.sender == lawyer, 'Only lawyer!');
+    
+    return uint(keccak256(abi.encode(block.timestamp, block.difficulty)));
+}
+
+function transfer(address payable _to, uint _value) external returns (bool) {
+    // _to can't be zero address
+    // no error message provided
+    // If you do not provide a string argument to require, 
+    // it will revert with empty error data
+    require(_to != address(0x00));
+    
+    _to.transfer(_value);
+    return true;
+}
+
+remember: You can optionally provide a message string for require, but not for assert.
+
+
+For the following cases, the error data from the external call (if provided) is forwarded. This mean that it can either cause an Error or a Panic (or whatever else was given):
+
+When transfer() fails
+When calling a function via a message call but it does not finish properly (i.e., it runs out of gas, has no matching function, or throws an exception itself), except when a low level operation call, send, delegatecall, callcode or staticcall is used. The low level operations never throw exceptions but indicate failures by returning false (more on low level function calls later).
+When create a contract using the new keyword but the contract creation does not finish properly.
+
+Note: Panic exceptions used to use the invalid opcode before Solidity 0.8.0, which consumed all gas available to the call. Exceptions that use require used to consume all gas until before the Metropolis release.
+
+revert
+For reverting current call, we can use Solidity 
+revert function to generate exceptions for displaying
+ error. This function will create an Error(String)
+  exception which optionally takes string message 
+  containing details about the error.
+
+contract Purchase {
+    uint price = 2 ether;
+    
+    function purchaseItem(uint _amount) public payable {
+        if (msg.value != _amount * price) {
+            revert("Only exact payments!");
+        }
+        
+        // Alternative way to do it:
+        require(msg.value == _amount * price, "Only exact payments!");
+    }
+}
+
+try/catch
+Exceptions during contract creation and external calls can be caught with the try/catch statement. try keyword has to be followed by an expression to an external function call or a contract creation (new ContractName()).
+
+The error which was occur after by revert("reasonString") or require(false, "reasonString") resulted with the catch clause of the type catch Error(string memory reason) invocation.
+
+catch (bytes memory lowLevelData) is executed if the error signature does not match any other clause, if there was an error while decoding the error message, or if no error data was provided with the exception.
+
+We can just use catch { … } if we are not interested in error data.
+
+contract B {
+    event LogErrorString(string message);
+    event LowLevelError(bytes data);
+
+    A instanceofA;
+
+    constructor() {
+        instanceofA = new A(msg.sender);
+    }
+
+
+    /**
+    * @dev try catch example with external calls
+    * 
+    * externalCall(0) => LogErrorString("external call failed!")
+    * externalCall(1) => LogErrorString("testFunction() is called!")
+    */    
+    function externalCall(uint _number) public {
+        try instanceofA.testFunction(_number) returns (string memory result) {
+            emit LogErrorString(result);
+        } catch {
+            emit LogErrorString("external call failed!");
+        }
+    }
+
+    /**
+    * @dev try catch example with contract creation
+    * 
+    * contractCreation(0x0000000000000000000000000000000000000000) => LogErrorString("Zero address not allowed!")
+    * contractCreation(0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2) => LowLevelError("")
+    * contractCreation(0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db) => LogErrorString("Contract A created!)
+    */  
+    function contractCreation(address _admin) public {
+        try new A(_admin) {
+            emit LogErrorString("Contract A created!");
+        } catch Error(string memory reason) {
+            emit LogErrorString(reason);
+        } catch (bytes memory reason) {
+            emit LowLevelError(reason);
+        }
+    }
+}

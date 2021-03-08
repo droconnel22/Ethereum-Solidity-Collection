@@ -1,4 +1,5 @@
-pragma solidity ^0.6.6;
+// SPDX-License-Identifier: MIT
+pragma solidity <0.9.0;
 
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -21,18 +22,18 @@ abstract contract FlashLoanReceiverBase is IFlashLoanReceiver, Withdrawable {
 
     receive() payable external {}
 
-    function transferFundsBackToPoolInternal(address _reserve, uint256 _amount) internal {
+    function transferFundsBackToPoolInternal(address _anyErc20ContractAddressAsReserve, uint256 _amount) internal {
         address payable core = addressesProvider.getLendingPoolCore();
-        transferInternal(core, _reserve, _amount);
+        transferInternal(core, _anyErc20ContractAddressAsReserve, _amount);
     }
 
-    function transferInternal(address payable _destination, address _reserve, uint256 _amount) internal {
-        if(_reserve == ethAddress) {
+    function transferInternal(address payable _destination, address _anyErc20ContractAddress, uint256 _amount) internal {
+        if(_anyErc20ContractAddress == ethAddress) {
             (bool success, ) = _destination.call{value: _amount}("");
             require(success == true, "Couldn't transfer ETH");
             return;
         }
-        IERC20(_reserve).safeTransfer(_destination, _amount);
+        IERC20(_anyErc20ContractAddress).safeTransfer(_destination, _amount);
     }
 
     function getBalanceInternal(address _target, address _reserve) internal view returns(uint256) {

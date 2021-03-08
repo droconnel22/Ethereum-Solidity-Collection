@@ -1,0 +1,45 @@
+https://ethereum.stackexchange.com/questions/74442/when-should-i-use-calldata-and-when-should-i-use-memory
+https://stackoverflow.com/questions/33839154/in-ethereum-solidity-what-is-the-purpose-of-the-memory-keyword
+
+memory and calldata (as well as storage) are keywords that define the data area where a variable is stored. 
+
+memory should be used when declaring variables (both function parameters as well as inside the logic of a function) 
+
+calldata must be used when declaring an external function's dynamic parameters.
+
+Breaking this down, let's first look at memory. memory's lifetime is limited to a function call and is meant to be used to temporarily store variables and their values.
+Values stored in memory do not persist on the network after the transaction has been completed. 
+
+Some notable implementation details about memory are as follows:
+
+It can be used for both function declaration parameters as well as within the function logic
+It is mutable (it can be overwritten and changed)
+It is non-persistent (the value does not persist a
+
+calldata is very similar to memory in that it is a data location where items are stored. It is a special data location that contains the function arguments, only available for external function call parameters. From the Solidity docs:
+
+Calldata is a non-modifiable, non-persistent area where function arguments are stored, and behaves mostly like memory.
+
+This is the cheapest location to use, but it has a limited size. In particular, that means that functions may be limited in their number of arguments.1 Notable implementation details about calldata are as follows:
+
+It can only be used for function declaration parameters (and not function logic)
+It is immutable (it can't be overwritten and changed)
+It must be used for dynamic parameters of an external function
+It is non-persistent (the value does not persist after the transaction has completed)
+
+pragma solidity 0.5.11;
+
+contract Test {
+
+    string stringTest;
+
+    function memoryTest(string memory _exampleString) public returns (string memory) {
+        stringTest = "example";  // You can modify memory
+        string memory newString = stringTest;  // You can use memory within a function's logic
+        return stringTest;  // You can return memory
+    }
+
+    function calldataTest(string calldata _exampleString) external returns (string memory) {
+        // cannot modify or return _exampleString
+    }
+}

@@ -1,0 +1,121 @@
+https://ethereum.stackexchange.com/questions/11770/what-is-the-difference-between-bytes-and-bytes32
+
+Bytes is a dynamic array of bytes. 
+It's shorthand for byte[] and you'll see
+ examples of a bytes being treated as an array in code from time to time.
+
+Bytes32 is exactly 32 bytes long. It takes exactly one 32-byte word to represent a bytes32 
+because there's no need to set any space aside to encode the length. 
+
+4 billion is largest uint
+
+The length is always 32. A bytes with 32 bytes of data needs additional encoding to deal with variable length.
+
+An important practical difference is that the fixed length bytes32 can be used in function arguments to pass data in or return data out of the contract. The variable length bytes type can be a function argument also, but only for internal use (inside the same contract) because the interface, called the ABI, doesn't support variable length types.
+
+Some possibly disorienting situations are possible if bytes is used as a function argument and the contract successfully compiles. Always use fixed length types for any function that will called from outside.
+
+https://jeancvllr.medium.com/solidity-tutorial-all-about-bytes-9d88fdb22676
+
+Table of Content :
+1) What are bytes in Solidity exactly ?
+2) How to declare a byte variable in Solidity
+3) Bitwise operations in Solidity
+4) An array of bytes : a little difference
+5) Storage, Memory and Stack related to Bytes
+6) Bytes as function argument
+7) Advanced operations with Bytes
+
+Bytes are easy to work with in Solidity because they are treated a lot like an array. You can just decode the bytes in the frontend and less data is stored on the blockchain.
+
+In Solidity, the data type byte represent a sequence of bytes.
+A byte is different than a number type of the same bit-size (like for instance uint8), because their internal representations are different:`
+// 0x00000000…01
+Uint8 u8 = 1;
+// 0x01000000….
+Byte b = 1;
+
+Bytes and Endianness
+In computing, the term endianness corresponds to how bytes are ordered (and stored) in a computer or any machine. Therefore, it defines the internal ordering of the memory.
+
+Bytes & Endianness in Ethereum
+Ethereum uses the two endianness format depending on the variable type, as follow :
+Big endian format : strings and bytes
+Little endian format : other types (numbers, addresses, etc…).
+
+As an example, this is how we would store the string “abcd” in one 
+full word (32 bytes):
+0x6162636400000000000000000000000000000000000000000000000000000000
+This is how the number 0x61626364 would be stored:
+0x0000000000000000000000000000000000000000000000000000000061626364
+
+
+Solidity presents two type of bytes types :
+fixed-sized byte arrays
+Dynamically-sized byte arrays.
+Fixed-size byte arrays
+You can define a variables by using the keyword bytesX where
+ X represents the sequence of bytes. X can be from 1 up to 32
+
+Dynamically-size byte arrays
+These are a really specific types. Basically, bytes and string are special array (see Solidity doc)
+
+Bytes
+use bytes for arbitrary-length raw byte data
+The term bytes in Solidity represents a dynamic array of bytes. It’s a shorthand for byte[] .
+Because bytes are treated as array is Solidity code, it can have a length of zero and you can do things like append a byte to the end.
+However, bytes is not a value type !
+You can push, pop and length
+
+String
+use string for arbitrary-length string (UTF-8) data
+bytes32 samevar = "stringliteral";
+This string literal is interpreted in its raw byte form when assigned to a bytes32 type.
+However, strings can’t be passed between contracts because they are not fixed size variables.
+Solidity does not have string manipulation functions, but there are third-party string libraries.
+
+For simplicity, we are going to use bytes1 data type ( equal tobyte ) for two variables : a and b. We will initialize them in Solidity by using their hex representation.
+bytes1 a = 0xb5; //  [10110101]
+bytes1 b = 0x56; //  [01010110]
+The following table display their representation in binary format
+
+function leftShiftBinary(
+    bytes32 a, 
+    uint n
+) public pure returns (bytes32) {
+    return bytes32(uint(a) * 2 ** n);
+}
+
+function rightShiftBinary(
+    bytes32 a, 
+    uint n
+) public pure returns (bytes32) {
+    return bytes32(uint(a) / 2 ** n);
+}
+// This function does the same than above using the << operators
+function leftShiftBinary2(
+    bytes32 a, 
+    uint n
+) public pure returns (bytes32) {
+    return a << n;
+}
+// Normally, we should do the following according to the article,
+// but explicit conversion is not allowed for bytes to uint
+var n = 3; 
+var aInt = uint8(a); // Converting bytes1 into 8 bit integer
+var shifted = aInt * 2 ** n;
+bytes1(shifted);     // Back to bytes. Result: 0xa8  [10101000]
+
+
+String literals are written with either double or single-quotes (“foo” or ‘bar’)…
+String literals support escape characters, such as \n, \xNN and \uNNNN. \xNN takes a hex value and inserts the appropriate byte, while \uNNNN takes a Unicode codepoint and inserts an UTF-8 sequence.
+
+
+Second reason to use bytes over string is smart-contract to smart-contract relations. Solidity ver. 0.4.19 is still unable to return string as function’s result for other contracts.
+
+function balanceOf(address _owner, uint256 _position) onlyOLevel external constant returns (bytes32) {
+  return brokersWallets[_owner][_position].balanceHash;
+}
+function historyOf(address _owner, uint256 _position) onlyOLevel external constant returns (bytes32) {
+  return brokersWallets[_owner][_position].balanceHash;
+}

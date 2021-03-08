@@ -1,0 +1,58 @@
+https://stackoverflow.com/questions/33839154/in-ethereum-solidity-what-is-the-purpose-of-the-memory-keyword
+
+Without the memory keyword, Solidity tries to declare variables in storage.
+
+
+Without the memory keyword, Solidity tries to declare variables in storage.
+
+Lead Solidity dev chriseth: “You can think of storage as a large array that has a virtual structure… a structure you cannot change at runtime
+ - it is determined by the state variables in your contract”.
+
+ That is, the structure of storage is set in stone at the time of contract creation based on your contract-level variable declarations and cannot be changed by future method calls.
+
+
+ BUT -- the contents of that storage can be changed with sendTransaction calls.
+
+ Such calls change “state” which is why contract-level variables are called “state variables”. 
+
+  So a variable uint8 storagevar; declared at the contract level can be changed to any valid value of uint8 (0-255) but that “slot” for a value of type uint8 will always be there.
+
+  f you declare variables in functions without the memory keyword, then solidity will try to use the storage structure, which currently compiles, but can produce unexpected results.
+
+  memory tells solidity to create a chunk of space for the variable at method runtime, guaranteeing its size and structure for future use in that method.
+
+memory cannot be used at the contract level. Only in methods.
+
+The Ethereum Virtual Machine has three areas where it can store items.
+
+https://stackoverflow.com/questions/33839154/in-ethereum-solidity-what-is-the-purpose-of-the-memory-keyword
+
+
+The first is “storage”, where all the 
+contract state variables reside. 
+Every contract has its own storage and
+ it is persistent between function calls 
+ and quite expensive to use.
+
+ The second is “memory”, this is used to hold 
+ temporary values. It is erased between
+  (external) function calls and is cheaper to use.
+
+The third one is the stack, 
+which is used to hold small local variables. It is almost free to use, 
+but can only hold a limited amount of values.
+
+The types where the so-called storage location is 
+important are structs and arrays. If you e.g. 
+pass such variables in function calls, their 
+data is not copied if it can stay in memory or 
+stay in storage. 
+
+his means that you can modify their content in the called function and these modifications will still be visible in the caller.
+
+There are defaults for the storage location depending on which type of variable it concerns:
+
+state variables are always in storage
+function arguments are always in memory
+local variables of struct, array or mapping type reference storage by default
+local variables of value type (i.e. neither array, nor struct nor mapping) are stored in the stack

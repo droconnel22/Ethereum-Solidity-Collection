@@ -1,6 +1,9 @@
 https://consensys.github.io/smart-contract-best-practices/
+https://ethereum-blockchain-developer.com/
 
 https://en.wikipedia.org/wiki/Commitment_scheme
+
+https://medium.com/coinmonks/whats-new-in-solidity-0-6-56fa76198ec7
 
 The convenience functions assert and require can be used to check for conditions and throw an exception if the condition is not met.
 
@@ -35,3 +38,42 @@ Therefore, address(this) and msg.sender are two unique addresses, the first refe
 Every account in Ethereum has an address. Contracts are special kinds of accounts and have their own addresses different from msg.sender and this.owner.
 
 The contract's address is determined by the account that created it and its nonce. So if you create a new contract from address1 you can know in advance what’s the address of your new contract e.g. with this Solidity code: address(keccak256(0xd6, 0x94, address1, currentNonce)). You can find more details in this answer How is the address of an Ethereum contract computed?
+
+memory and calldata (as well as storage) are keywords that define the data area where a variable is stored. To answer your question directly, memory should be used when declaring variables (both function parameters as well as inside the logic of a function) that you want stored in memory (temporary), and calldata must be used when declaring an external function's dynamic parameters.
+
+The easiest way to think about the difference is that calldata is a non-modifiable, non-persistent area where function arguments are stored, and behaves mostly like memory.
+
+One good way to think about the difference and how they should be used is that calldata is allocated by the caller, while memory is allocated by the callee.
+
+
+Without the memory keyword, Solidity tries to declare variables in storage.
+
+That is, the structure of storage is set in stone at the time of contract creation based on your contract-level variable declarations and cannot be changed by future method calls.
+
+https://www.youtube.com/watch?v=9xqoK2nKkM4
+In solidity the 0x40 slot in memory is special:
+it contains the "free memory pointer"
+which points to the end of the currently allocated memory.
+
+0x14 = 20
+
+However, strings can’t be passed between contracts because they are not fixed size variables.
+The fixed length bytes32 can be used in function arguments to pass data in or return data out of a contract.
+The variable length bytes can be used in function arguments also, but only for internal use (inside the same contract), because the interface (ABI) does not support variable length type.
+
+As we know, an address in Ethereum is a 20 bytes value. 
+
+As a rule of thumb, use bytes for arbitrary-length raw byte data and string for arbitrary-length string (UTF-8) data.
+
+If you can limit the length to a certain number of bytes, always use one of bytes1 to bytes32 because they are much cheaper.
+
+assert should only be used to test for internal errors, and to check invariants.
+
+The require function used to guarantees valid conditions that can’t be detected before execution.  It checks conditions on input, contract state variables or return values from calls to external contracts. 
+
+remember: You can optionally provide a message string for require, but not for assert.
+
+
+
+
+
