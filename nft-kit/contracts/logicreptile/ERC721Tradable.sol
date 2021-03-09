@@ -19,6 +19,8 @@ contract ERC721Tradable is ERC721Full, Ownable {
     address proxyRegistryAddress;
     uint256 private _currentTokenId = 0;
 
+    string internal tokenBaseURI = "https://ipfs.infura.io/ipfs/";
+
     constructor(
         string memory _name,
         string memory _symbol,
@@ -52,8 +54,8 @@ contract ERC721Tradable is ERC721Full, Ownable {
         _currentTokenId++;
     }
 
-    function baseTokenURI() public pure virtual returns (string memory) {
-        return "";
+    function baseTokenURI() public view virtual returns (string memory) {
+        return tokenBaseURI;
     }
 
     function tokenURI(uint256 _tokenId) external view override virtual returns (string memory) {
