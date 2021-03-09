@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity >=0.5.11 <0.9.0;
+
 /**
  * @dev Interface of the ERC165 standard, as defined in the
  * https://eips.ethereum.org/EIPS/eip-165[EIP].
@@ -21,3 +22,4 @@ interface IERC165 {
      */
     function supportsInterface(bytes4 interfaceId) external view returns (bool);
 }
+

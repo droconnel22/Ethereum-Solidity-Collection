@@ -2,9 +2,13 @@
 
 const LogicReptileToken = artifacts.require("LogicReptileToken");
 
-module.exports = async(deployer, network, addresses) => {
-    // OpenSea proxy registry addresses for rinkeby and mainnet.
+module.exports = async (deployer, network, addresses) => {
+  // OpenSea proxy registry addresses for rinkeby and mainnet.
   let proxyRegistryAddress = "";
+  let baseURI = "https://ipfs.io/ipfs/"
+  let name = "LogicReptile"
+  let symbol = "LRV3"
+  let uri = "QmV3HwDUkFASJgpmSM4h6wbkRnRUU4UbFwgrdPpPB7tj9k";
 
   if (network === 'rinkeby-fork' || network === 'rinkeby') {
     proxyRegistryAddress = "0xf57b2c51ded3a29e6891aba85459d600256cf317";
@@ -15,6 +19,7 @@ module.exports = async(deployer, network, addresses) => {
    // proxyRegistryAddress = "0xa5409ec958c83c3f309868babaca7c86dcb077c1";
   }
     
-    // Additional contracts can be deployed here
-    await deployer.deploy(LogicReptileToken,"LogicReptileTest","LRT1",proxyRegistryAddress);
+  // Additional contracts can be deployed here
+  await deployer.deploy(LogicReptileToken, name, symbol,baseURI);
+
 };

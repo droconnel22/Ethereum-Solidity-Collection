@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
-
 pragma solidity >=0.5.11 <0.9.0;
 
-import "./IERC721.sol";
+import "../IERC721.sol";
 
 /**
  * @title ERC-721 Non-Fungible Token Standard, optional metadata extension

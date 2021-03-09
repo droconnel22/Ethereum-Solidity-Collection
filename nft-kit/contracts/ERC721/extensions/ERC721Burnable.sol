@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: MIT
 
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.5.11 <0.9.0;
 
-import "./ERC721.sol";
-import "../gsn/Context.sol";
+import "../../gsn/Context.sol";
+import "../ERC721.sol";
 
 /**
  * @title ERC721 Burnable Token
