@@ -61,6 +61,7 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
         _setupRole(BURNER_ROLE, _msgSender());
+        
     }
 
     modifier onlyAdmin() {
@@ -120,12 +121,13 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
         * @param _tokenURI the IPFS or equivalent hash
         * @param _edition the identifier of the edition - leading 3 bytes are the artist code, trailing 3 bytes are the asset type
     */
-    function mint(address _artist, string calldata _tokenURI, bytes16 _edition) external onlyMinter {       
+    function mint(address _artist, string calldata _tokenURI, bytes16 _edition) external onlyMinter returns(uint256) {       
         uint256 _currentTokenId = _tokenIdTracker.current();
         _mint( _artist, _currentTokenId);   
         _populateTokenData(_currentTokenId, _tokenURI, _edition);
         emit Minted(_artist, _currentTokenId, _tokenURI, _edition);    
         _tokenIdTracker.increment();
+        return _currentTokenId;
     }   
 
     function _populateTokenData(uint256 _tokenId, string memory _tokenURI, bytes16 _edition) internal {
@@ -135,7 +137,6 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
     }
 
     function burn(uint256 _tokenId) public override {
-        super.burn(_tokenId);
         _burn(_tokenId);
         _depopulateTokenData(_tokenId);
         emit Burned(_tokenId);
