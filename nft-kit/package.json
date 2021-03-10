@@ -1,0 +1,45 @@
+{
+  "name": "nft-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^4.3.3",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-hdwallet-provider-privkey": "^0.3.0"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smart",
+    "contracts",
+    "security"
+  ],
+  "devDependencies": {
+    "@openzeppelin/docs-utils": "^0.1.0",
+    "@openzeppelin/test-helpers": "^0.5.9",
+    "chai": "^4.2.0",
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-mocha-no-only": "^1.1.0",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "hardhat": "^2.0.6",
+    "hardhat-gas-reporter": "^1.0.4",
+    "lodash.startcase": "^4.4.0",
+    "lodash.zip": "^4.2.0",
+    "micromatch": "^4.0.2",
+    "mocha": "^8.0.1",
+    "web3": "^1.3.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Dennis O'Connell",
+  "license": "MIT"
+}

@@ -8,7 +8,6 @@ module.exports = async (deployer, network, addresses) => {
   let baseURI = "https://ipfs.io/ipfs/"
   let name = "LogicReptile"
   let symbol = "LRV3"
-  let uri = "QmV3HwDUkFASJgpmSM4h6wbkRnRUU4UbFwgrdPpPB7tj9k";
 
   if (network === 'rinkeby-fork' || network === 'rinkeby') {
     proxyRegistryAddress = "0xf57b2c51ded3a29e6891aba85459d600256cf317";
@@ -21,5 +20,4 @@ module.exports = async (deployer, network, addresses) => {
     
   // Additional contracts can be deployed here
   await deployer.deploy(LogicReptileToken, name, symbol,baseURI);
-
 };

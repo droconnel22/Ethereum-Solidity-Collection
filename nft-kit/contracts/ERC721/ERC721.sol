@@ -47,14 +47,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
         _symbol = symbol_;
     }
 
-     /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return interfaceId == type(IERC721).interfaceId
-            || interfaceId == type(IERC721Metadata).interfaceId
-            || super.supportsInterface(interfaceId);
-    }
+  
 
     /**
      * @dev See {IERC721-balanceOf}.
@@ -278,13 +271,14 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
      */
     function _burn(uint256 tokenId) internal virtual {
         address owner = ERC721.ownerOf(tokenId);
-
         _beforeTokenTransfer(owner, address(0), tokenId);
 
         // Clear approvals
         _approve(address(0), tokenId);
 
-        _balances[owner] -= 1;
+        unchecked {
+             _balances[owner] -= 1;
+        }       
         delete _owners[tokenId];
 
         emit Transfer(owner, address(0), tokenId);
@@ -338,8 +332,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
      * @return bool whether the call correctly returned the expected magic value
      */
     function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
-        private returns (bool)
-    {
+        private returns (bool)   {
         if (to.isContract()) {
             try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, _data) returns (bytes4 retval) {
                 return retval == IERC721Receiver(to).onERC721Received.selector;
