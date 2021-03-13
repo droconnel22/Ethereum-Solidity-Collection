@@ -7,7 +7,7 @@ module.exports = async (deployer, network, addresses) => {
   let proxyRegistryAddress = "";
   let baseURI = "https://ipfs.io/ipfs/"
   let name = "LogicReptile"
-  let symbol = "LRV3"
+  let symbol = "LRV4"
 
   if (network === 'rinkeby-fork' || network === 'rinkeby') {
     proxyRegistryAddress = "0xf57b2c51ded3a29e6891aba85459d600256cf317";

@@ -1,0 +1,50 @@
+{
+    "description": "A Very Logical Reptile by Thomas Martin", 
+    "external_url": "https://dennisoconnell.me", 
+    "image": "https://ipfs.io/ipfs/QmRSGhi6BHsi3Y8TQxn1LVTNfXmWJGQ7qPL7TeV4H2mCTP?filename=false%20measurer%20.MP4", 
+    "name": "Test Asset 1",
+    "background_color": "141414",
+    "attributes": [
+        {
+          "trait_type": "Artist", 
+          "value": "Over Powered"
+        }, 
+        {
+          "trait_type": "Music", 
+          "value": "Next Level"
+        }, 
+        {
+          "trait_type": "Level", 
+          "value": 9001
+        }, 
+        {
+          "trait_type": "Stamina", 
+          "value": 95
+        }, 
+        {
+          "trait_type": "Personality", 
+          "value": "Happy"
+        }, 
+        {
+          "display_type": "boost_number", 
+          "trait_type": "Aqua Power", 
+          "value": 40
+        }, 
+        {
+          "display_type": "boost_percentage", 
+          "trait_type": "Stamina Increase", 
+          "value": 17
+        }, 
+        {
+          "display_type": "number", 
+          "trait_type": "Generation", 
+          "value": 3
+        },
+        {
+            "display_type": "date", 
+            "trait_type": "birthday", 
+            "value": 1615469559
+          }
+      ]
+
+}

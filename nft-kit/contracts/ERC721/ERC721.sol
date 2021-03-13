@@ -46,9 +46,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
         _name = name_;
         _symbol = symbol_;
     }
-
-  
-
+    
     /**
      * @dev See {IERC721-balanceOf}.
      */
@@ -269,8 +267,8 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
      *
      * Emits a {Transfer} event.
      */
-    function _burn(uint256 tokenId) internal virtual {
-        address owner = ERC721.ownerOf(tokenId);
+    function _burn(uint256 tokenId) internal virtual {   
+        address owner = ERC721.ownerOf(tokenId);     
         _beforeTokenTransfer(owner, address(0), tokenId);
 
         // Clear approvals

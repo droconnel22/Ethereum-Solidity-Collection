@@ -1136,6 +1136,33 @@ interface IERC721Metadata is IERC721 {
 }
 
 /**
+ * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
+ * @dev See https://eips.ethereum.org/EIPS/eip-721
+ */
+interface IERC721Enumerable is IERC721 {
+
+    /**
+     * @dev Returns the total amount of tokens stored by the contract.
+     */
+    function totalSupply() external view returns (uint256);
+
+    /**
+     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
+     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
+     */
+    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256 tokenId);
+
+    /**
+     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
+     * Use along with {totalSupply} to enumerate all tokens.
+     */
+    function tokenByIndex(uint256 index) external view returns (uint256);
+}
+
+
+
+
+/**
  * @dev Implementation of https://eips.ethereum.org/EIPS/eip-721[ERC721] Non-Fungible Token Standard, including
  * the Metadata extension, but not including the Enumerable extension, which is available separately as
  * {ERC721Enumerable}.
@@ -1169,16 +1196,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
         _name = name_;
         _symbol = symbol_;
     }
-
-     /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
-        return interfaceId == type(IERC721).interfaceId
-            || interfaceId == type(IERC721Metadata).interfaceId
-            || super.supportsInterface(interfaceId);
-    }
-
+    
     /**
      * @dev See {IERC721-balanceOf}.
      */
@@ -1399,15 +1417,16 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
      *
      * Emits a {Transfer} event.
      */
-    function _burn(uint256 tokenId) internal virtual {
-        address owner = ERC721.ownerOf(tokenId);
-
+    function _burn(uint256 tokenId) internal virtual {   
+        address owner = ERC721.ownerOf(tokenId);     
         _beforeTokenTransfer(owner, address(0), tokenId);
 
         // Clear approvals
         _approve(address(0), tokenId);
 
-        _balances[owner] -= 1;
+        unchecked {
+             _balances[owner] -= 1;
+        }       
         delete _owners[tokenId];
 
         emit Transfer(owner, address(0), tokenId);
@@ -1461,8 +1480,7 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
      * @return bool whether the call correctly returned the expected magic value
      */
     function _checkOnERC721Received(address from, address to, uint256 tokenId, bytes memory _data)
-        private returns (bool)
-    {
+        private returns (bool)   {
         if (to.isContract()) {
             try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, _data) returns (bytes4 retval) {
                 return retval == IERC721Receiver(to).onERC721Received.selector;
@@ -1499,30 +1517,12 @@ contract ERC721 is Context, ERC165, IERC721, IERC721Metadata  {
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal virtual { }    
 }
 
+
 /**
- * @title ERC-721 Non-Fungible Token Standard, optional enumeration extension
- * @dev See https://eips.ethereum.org/EIPS/eip-721
+ * @dev This implements an optional extension of {ERC721} defined in the EIP that adds
+ * enumerability of all the token ids in the contract as well as all token ids owned by each
+ * account.
  */
-interface IERC721Enumerable is IERC721 {
-
-    /**
-     * @dev Returns the total amount of tokens stored by the contract.
-     */
-    function totalSupply() external view returns (uint256);
-
-    /**
-     * @dev Returns a token ID owned by `owner` at a given `index` of its token list.
-     * Use along with {balanceOf} to enumerate all of ``owner``'s tokens.
-     */
-    function tokenOfOwnerByIndex(address owner, uint256 index) external view returns (uint256 tokenId);
-
-    /**
-     * @dev Returns a token ID at a given `index` of all the tokens stored by the contract.
-     * Use along with {totalSupply} to enumerate all tokens.
-     */
-    function tokenByIndex(uint256 index) external view returns (uint256);
-}
-
 abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     // Mapping from owner to list of owned token IDs
     mapping(address => mapping(uint256 => uint256)) private _ownedTokens;
@@ -1536,13 +1536,6 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     // Mapping from token id to position in the allTokens array
     mapping(uint256 => uint256) private _allTokensIndex;
 
-    /**
-     * @dev See {IERC165-supportsInterface}.
-     */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(IERC165, ERC721) returns (bool) {
-        return interfaceId == type(IERC721Enumerable).interfaceId
-            || super.supportsInterface(interfaceId);
-    }
 
     /**
      * @dev See {IERC721Enumerable-tokenOfOwnerByIndex}.
@@ -1671,6 +1664,8 @@ abstract contract ERC721Enumerable is ERC721, IERC721Enumerable {
     }
 }
 
+
+
 /**
  * @title ERC721 Burnable Token
  * @dev ERC721 Token that can be irreversibly burned (destroyed).
@@ -1724,17 +1719,50 @@ interface IERC721Receiver {
     function onERC721Received(address operator, address from, uint256 tokenId, bytes calldata data) external returns (bytes4);
 }
 
+
+
+
 contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC721Burnable, ERC721Pausable {
     using Counters for Counters.Counter;
 
+    // Minter Role
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
+
+    // Burner Role
+    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+
+    // Pauser Role
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
-    Counters.Counter internal _tokenIdTracker;
+    // Token Id Counter
+    Counters.Counter internal _tokenIdTracker;  
 
-    string private _baseTokenURI;
+    // Base URI for metadata
+    string internal _baseTokenURI;
 
-    constructor(string memory name_, 
+    // Optional mapping for token URIs
+    mapping(uint256 => string) internal _tokenURIs;
+
+    // Token Id to Edition
+    mapping(uint256 => bytes16) internal _tokenIdToEdition;
+
+    // Token Id to Price 
+    mapping(uint256 => uint256) internal _tokenIdToPriceInWei;
+    
+    // Token Id to Purchase Time
+    mapping(uint256 => uint32) internal _tokenIdToPurchaseFromTime;
+
+    // Token Id to Purchase
+    mapping(uint256 => bool) internal _tokenIdToPurchased;
+
+    // Event for Minting
+    event Minted(address indexed _artist, uint256 indexed _tokenId, string _tokenURI, bytes16 _edition);
+
+    // Event for Burning
+    event Burned(uint256 indexed _tokenId);
+
+    constructor(
+    string memory name_, 
     string memory symbol_, 
     string memory baseTokenURI_
       )  ERC721(name_, symbol_) {
@@ -1742,6 +1770,13 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
         _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
         _setupRole(MINTER_ROLE, _msgSender());
         _setupRole(PAUSER_ROLE, _msgSender());
+        _setupRole(BURNER_ROLE, _msgSender());
+        
+    }
+
+    modifier onlyAdmin() {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()), "ERC721 Full: Admin Role Required.");
+        _;
     }
 
     modifier onlyPauser(){
@@ -1752,30 +1787,80 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
     modifier onlyMinter(){
         require(hasRole(MINTER_ROLE, _msgSender()), "ERC721 Full: Minter Role Required");
         _;
-
     }
 
+    modifier onlyBurner(){
+         require(hasRole(BURNER_ROLE, _msgSender()), "ERC721 Full: Burner Role Required");
+        _;
+    }
+
+
+    /**
+    * @dev See {IERC721Metadata-baseURI}.
+    */
     function _baseURI() internal view virtual override returns(string memory){
         return _baseTokenURI;
     }
 
     /**
-     * @dev Creates a new token for `to`. Its token ID will be automatically
-     * assigned (and available on the emitted {IERC721-Transfer} event), and the token
-     * URI autogenerated based on the base URI passed at construction.
-     *
-     * See {ERC721-_mint}.
-     *
-     * Requirements:
-     *
-     * - the caller must have the `MINTER_ROLE`.
-     */
-     function mint(address _to) public onlyMinter virtual {
-         _mint(_to, _tokenIdTracker.current());
-         _tokenIdTracker.increment();
-     }
+    * @dev Allows management to update the base tokenURI path
+    * @dev Reverts if not called by management
+    * @param _newBaseURI the new base URI to set
+    */
+    function setTokenBaseURI(string calldata _newBaseURI) external onlyAdmin {
+        _baseTokenURI = _newBaseURI;
+    }
+  
 
-      /**
+     /**
+     * @dev See {IERC721Metadata-tokenURI}.
+     */
+    function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+        require(_exists(_tokenId), "ERC721FULL: Token Id Does Not Exist");
+        require(keccak256(abi.encodePacked("")) != keccak256(abi.encodePacked(_tokenURIs[_tokenId])), "ERC721Metadata: Token id query for nonexistent URI.");
+        string memory baseURI = _baseURI();
+        string storage _tokenURI = _tokenURIs[_tokenId];
+        return bytes(baseURI).length > 0
+            ? string(abi.encodePacked(baseURI, _tokenURI))
+            : '';
+    }
+     /**
+        * @dev Mint a new token
+        * @dev Reverts if not called by minter
+        * @param _artist the artist of the art
+        * @param _tokenURI the IPFS or equivalent hash
+        * @param _edition the identifier of the edition - leading 3 bytes are the artist code, trailing 3 bytes are the asset type
+    */
+    function mint(address _artist, string calldata _tokenURI, bytes16 _edition) external onlyMinter returns(uint256) {       
+        uint256 _currentTokenId = _tokenIdTracker.current();
+        _mint( _artist, _currentTokenId);   
+        _populateTokenData(_currentTokenId, _tokenURI, _edition);
+        emit Minted(_artist, _currentTokenId, _tokenURI, _edition);    
+        _tokenIdTracker.increment();
+        return _currentTokenId;
+    }   
+
+    function _populateTokenData(uint256 _tokenId, string memory _tokenURI, bytes16 _edition) internal {
+        _tokenURIs[_tokenId] = _tokenURI;
+        _tokenIdToEdition[_tokenId] = _edition;
+        _tokenIdToPurchased[_tokenId] = false;        
+    }
+
+    function burn(uint256 _tokenId) public override {
+        require(_msgSender() == ERC721.ownerOf(_tokenId) ||
+        hasRole(DEFAULT_ADMIN_ROLE, _msgSender())  ||
+        hasRole(BURNER_ROLE, _msgSender()), "ERC721: Not Permissioned To Burn.");
+        _burn(_tokenId);
+        _depopulateTokenData(_tokenId);
+        emit Burned(_tokenId);
+    }
+
+    function _depopulateTokenData(uint256 _tokenId) internal {
+        delete _tokenURIs[_tokenId];
+        delete _tokenIdToEdition[_tokenId];
+    }    
+
+    /**
      * @dev Pauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_pause}.
@@ -1788,7 +1873,7 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
          _pause();
      }
 
-     /**
+    /**
      * @dev Unpauses all token transfers.
      *
      * See {ERC721Pausable} and {Pausable-_unpause}.
@@ -1797,11 +1882,11 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-     function unpause() public onlyPauser {
+    function unpause() public onlyPauser {
          _unpause();
-     }
+    }
 
-/**
+    /**
      * @dev Prefixes token transfers.
      *
      * See {ERC721}
@@ -1817,9 +1902,14 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721Enumerable) returns (bool) {
-         return super.supportsInterface(interfaceId);
-     }
+    function supportsInterface(bytes4 interfaceId) public view virtual override returns (bool) {
+        return interfaceId == type(IERC721).interfaceId
+            || interfaceId == type(IERC721Metadata).interfaceId
+            || interfaceId == type(IERC721Enumerable).interfaceId
+            || interfaceId == type(ERC721Pausable).interfaceId
+            || interfaceId == type(ERC721Burnable).interfaceId
+            || super.supportsInterface(interfaceId);
+    }
 }
 
 

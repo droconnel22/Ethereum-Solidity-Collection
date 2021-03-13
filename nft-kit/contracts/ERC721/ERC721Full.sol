@@ -100,13 +100,13 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
     function setTokenBaseURI(string calldata _newBaseURI) external onlyAdmin {
         _baseTokenURI = _newBaseURI;
     }
-
-    
+  
 
      /**
      * @dev See {IERC721Metadata-tokenURI}.
      */
     function tokenURI(uint256 _tokenId) public view override returns (string memory) {
+        require(_exists(_tokenId), "ERC721FULL: Token Id Does Not Exist");
         require(keccak256(abi.encodePacked("")) != keccak256(abi.encodePacked(_tokenURIs[_tokenId])), "ERC721Metadata: Token id query for nonexistent URI.");
         string memory baseURI = _baseURI();
         string storage _tokenURI = _tokenURIs[_tokenId];
@@ -137,6 +137,9 @@ contract ERC721Full is Context, AccessControlEnumerable, ERC721Enumerable, ERC72
     }
 
     function burn(uint256 _tokenId) public override {
+        require(_msgSender() == ERC721.ownerOf(_tokenId) ||
+        hasRole(DEFAULT_ADMIN_ROLE, _msgSender())  ||
+        hasRole(BURNER_ROLE, _msgSender()), "ERC721: Not Permissioned To Burn.");
         _burn(_tokenId);
         _depopulateTokenData(_tokenId);
         emit Burned(_tokenId);
