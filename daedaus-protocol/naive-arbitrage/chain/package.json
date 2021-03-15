@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.2.3",
+    "dotenv": "^8.2.0",
+    "truffle-hdwallet-provider": "^1.0.17",
+    "truffle-hdwallet-provider-privkey": "^0.3.0"
+  },
+  "name": "chain",
+  "version": "1.0.0",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
