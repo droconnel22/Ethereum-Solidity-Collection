@@ -1,0 +1,27 @@
+{
+    "description": "Everything we do is a conversation with the past. This is a tribute to Alvin Lucier. It is a Triller video of a TikTok of a recording made by re-recording my voice on a room mic until the harmonics of the space eclipse the actual words and melody I’m performing. This layering mirrors the process by which we compile meaning from our experiences. I think of this file as alive. The voice and cello are like the spine, the layers of harmonics are the legs, and the glitchy digital angles are the protocols that the “logic reptile” attempts to navigate. Just like our own existence, the experiment fades away into a commercial, turning one’s personal observations into corporate aggrandizement.", 
+    "external_url": "https://www.instagram.com/gidefaut/?hl=en`", 
+    "image": "https://ipfs.io/ipfs/QmV3HwDUkFASJgpmSM4h6wbkRnRUU4UbFwgrdPpPB7tj9k?filename=2021-02-28_19-22-39-1350.mp4", 
+    "name": "Logic Reptile",
+    "background_color": "141414",
+    "attributes": [
+        {
+          "trait_type": "Artist", 
+          "value": "Thomas Martin"
+        }, 
+        {
+          "trait_type": "Tribute", 
+          "value": "Alvin Lucier"
+        }, 
+        {
+          "trait_type": "Instrument", 
+          "value": "Cello"
+        }, 
+        {
+          "display_type": "date", 
+          "trait_type": "birthday", 
+          "value": 1617475106
+        }
+      ]
+
+}

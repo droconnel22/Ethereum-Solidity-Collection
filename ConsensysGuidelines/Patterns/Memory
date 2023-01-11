@@ -3,8 +3,6 @@ https://stackoverflow.com/questions/33839154/in-ethereum-solidity-what-is-the-pu
 Without the memory keyword, Solidity tries to declare variables in storage.
 
 
-Without the memory keyword, Solidity tries to declare variables in storage.
-
 Lead Solidity dev chriseth: “You can think of storage as a large array that has a virtual structure… a structure you cannot change at runtime
  - it is determined by the state variables in your contract”.
 
